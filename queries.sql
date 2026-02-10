@@ -1,0 +1,8 @@
+CREATE TABLE blogs(
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    content VARCHAR(5000) NOT NULL,
+    author VARCHAR(100),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP
+);
