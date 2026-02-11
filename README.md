@@ -57,7 +57,7 @@ DB_PASSWORD=your_password
 DB_PORT=5432
 APP_PORT=4000
 SERVER_PORT=3000
-API_URL="http://localhost:4000"
+API_URL=http://localhost:4000
 ```
 
 ### 3. Installation
