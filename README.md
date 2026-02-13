@@ -69,10 +69,10 @@ Bash
 npm install
 
 # Start the API Server (Port 4000)
-node index.js
+npm run api
 
 # Start the Frontend Server (Port 3000)
-node server.js
+npm run server
 
 ```
 
