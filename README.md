@@ -99,25 +99,73 @@ npm run server
 
 ---
 
-## 🛡️ Authentication Note
+# 🔐 Production Protection (Demo Mode)
 
-This application is not deployed publicly yet.
+To prevent unauthorized modifications on the live deployed version, the application runs in **Demo Mode** when deployed to production.
 
-At the current stage, all CRUD routes are publicly accessible.
-Before deploying to production, I plan to implement:
+In production:
 
-- User authentication (JWT / sessions)
-- Route protection
-- Authorization for create/edit/delete actions
-
-The project is intentionally kept undeployed at this stage to avoid
-security issues with public access.
+- `GET` requests are publicly accessible
+- All write operations (`POST`, `PUT`, `PATCH`, `DELETE`) require an admin key
+- Unauthorized write requests return `403 Forbidden`
 
 ---
 
-## 📈 Planned Enhancements
+## 🛡️ Middleware Implementation
+
+`app.use((req, res, next) => { if (process.env.NODE_ENV === "production" && req.method !== "GET") { const secret = req.headers["x-admin-key"]; if (secret !== process.env.ADMIN_KEY) { return res.status(403).send("Demo Mode - Write access disabled");
+    }
+  } next();
+});`
+
+---
+
+## ⚙️ Environment Variables Required
+
+Add the following variables:
+
+`NODE_ENV=production ADMIN_KEY=your_secure_random_string`
+
+For local development:
+
+`NODE_ENV=development`
+
+In development mode, write operations are not restricted.
+
+---
+
+## 🔑 How to Perform Write Operations in Production
+
+To create, edit, or delete blog posts in production, send the admin key in request headers:
+
+Example using fetch:
+
+`fetch("/posts", { method: "POST", headers: { "Content-Type": "application/json", "x-admin-key": "your_secure_random_string" }, body: JSON.stringify(data)
+});`
+
+Example using Postman:
+
+- Add Header:
+  - Key: `x-admin-key`
+  - Value: your admin key
+
+---
+
+## 🎯 Why This Approach?
+
+This lightweight protection:
+
+- Prevents database tampering in public demos
+- Keeps the live portfolio stable
+- Avoids implementing full authentication for demo purposes
+- Demonstrates production-aware backend design
+
+> **This approach is intended for demo protection only. A full authentication and authorization system (e.g., JWT-based auth) would be implemented in a production-grade application.**
+
+---
+
+## 🔒 Future Security Improvements
 
 - User authentication and authorization
 - Role-based access control
 - Protected API routes
-- Deployment on cloud platform
