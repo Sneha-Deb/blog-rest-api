@@ -36,7 +36,15 @@ db.query("SELECT NOW()", (err, res) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-//Write your code here//
+app.use((req, res, next) => {
+  if (process.env.NODE_ENV === "production" && req.method !== "GET") {
+    const secret = req.headers["x-admin-key"];
+    if (secret !== process.env.ADMIN_KEY) {
+      return res.status(403).send("Demo Mode - Write access disabled");
+    }
+  }
+  next();
+});
 
 //CHALLENGE 1: GET All posts
 app.get("/posts", async (req, res) => {
