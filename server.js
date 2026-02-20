@@ -84,7 +84,12 @@ app.post("/api/posts", async (req, res) => {
     res.redirect("/");
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Error creating post" });
+    if (error.response) {
+      // This prints the "All fields are required" message instead of a crash log
+      return res.status(400).json({ message: error.response.data.message });
+    } else {
+      return res.status(500).json({ message: "Error creating post" });
+    }
   }
 });
 

@@ -68,7 +68,10 @@ app.get("/posts/:id", async (req, res) => {
 
 //CHALLENGE 3: POST a new post
 app.post("/posts", async (req, res) => {
-  const { title, content, author } = req.body;
+  // const { title, content, author } = req.body;
+  const title = req.body.title?.trim();
+  const content = req.body.content?.trim();
+  const author = req.body.author?.trim();
 
   try {
     if (!title || !content || !author) {
@@ -92,7 +95,10 @@ app.patch("/posts/:id", async (req, res) => {
   if (isNaN(id)) {
     return res.status(400).json({ message: "Invalid id" });
   }
-  const { title, content, author } = req.body;
+  // const { title, content, author } = req.body;
+  const title = req.body.title?.trim();
+  const content = req.body.content?.trim();
+  const author = req.body.author?.trim();
 
   try {
     const check = await db.query("SELECT * FROM blogs WHERE id = $1", [id]);
