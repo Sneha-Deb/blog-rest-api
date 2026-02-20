@@ -13,7 +13,7 @@ dotenv.config({
   path: path.resolve(__dirname, ".env"),
 });
 
-const port = process.env.APP_PORT || 4000;
+const port = process.env.PORT || process.env.APP_PORT || 4000;
 
 const db = new pg.Pool({
   user: process.env.DB_USER,
@@ -35,16 +35,6 @@ db.query("SELECT NOW()", (err, res) => {
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-app.use((req, res, next) => {
-  if (process.env.NODE_ENV === "production" && req.method !== "GET") {
-    const secret = req.headers["x-admin-key"];
-    if (secret !== process.env.ADMIN_KEY) {
-      return res.status(403).send("Demo Mode - Write access disabled");
-    }
-  }
-  next();
-});
 
 //CHALLENGE 1: GET All posts
 app.get("/posts", async (req, res) => {

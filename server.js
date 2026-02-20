@@ -5,13 +5,23 @@ import dotenv from "dotenv";
 const app = express();
 dotenv.config();
 
-const port = process.env.SERVER_PORT || 3000;
+const port = process.env.PORT || process.env.SERVER_PORT || 3000;
 const API_URL = process.env.API_URL;
 
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.set("view engine", "ejs");
+
+app.use((req, res, next) => {
+  if (process.env.NODE_ENV === "production" && req.method !== "GET") {
+    const secret = req.headers["x-admin-key"];
+    if (secret !== process.env.ADMIN_KEY) {
+      return res.status(403).send("Demo Mode - Write access disabled");
+    }
+  }
+  next();
+});
 
 // Route to render the main page
 app.get("/", async (req, res) => {
